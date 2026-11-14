@@ -44,9 +44,27 @@ function closeRow(lang) {
   );
 }
 
+async function resolveCategory(guild, config) {
+  const configured = config.channels?.ticketCategory;
+  if (configured) {
+    const found =
+      guild.channels.cache.get(configured) || (await guild.channels.fetch(configured).catch(() => null));
+    if (found?.type === ChannelType.GuildCategory) return found;
+  }
+  const existing = guild.channels.cache.find(
+    (channel) => channel.type === ChannelType.GuildCategory && channel.name.toLowerCase() === 'başvurular',
+  );
+  if (existing) return existing;
+  return guild.channels
+    .create({ name: 'Başvurular', type: ChannelType.GuildCategory })
+    .catch(() => null);
+}
+
 async function openTicket(guild, user, config, { slug = 'ticket', reason = '-' } = {}) {
   const me = guild.members.me;
   if (!me?.permissions.has(PermissionFlagsBits.ManageChannels)) return null;
+
+  const parent = await resolveCategory(guild, config);
 
   const name = `${slug}-${user.username}`.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 90) || slug;
   const staffRole = config.staffRoleIds?.[0];
@@ -85,7 +103,7 @@ async function openTicket(guild, user, config, { slug = 'ticket', reason = '-' }
       type: ChannelType.GuildText,
       topic: `ticket:${user.id}`,
       permissionOverwrites: overwrites,
-      parent: config.channels?.ticketCategory || undefined,
+      parent: parent?.id || undefined,
     })
     .catch(() => null);
 }
