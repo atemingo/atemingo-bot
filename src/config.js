@@ -56,6 +56,9 @@ const DEFAULTS = {
     expireDays: 7,
     sweepMinutes: 10,
   },
+  ticketAuto: {
+    enabled: true,
+  },
 };
 
 function merge(base, extra) {

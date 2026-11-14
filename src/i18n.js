@@ -133,6 +133,12 @@ const STRINGS = {
     'ticketgui.posted': 'Panel {channel} kanalına gönderildi.',
     'ticketgui.failed': 'Panel gönderilemedi (yetki veya kanal).',
     'ticketgui.alreadyOpen': 'Zaten açık bir destek kanalın var: {channel}',
+    'auto.askOs': 'Hangi işletim sistemini kullanıyorsun — **Windows** mu, **Linux** mu (deb dahil)? Yaz, indirme linkini hemen atayım.',
+    'auto.windows': 'Windows indirme linki:\n{windows}\n\nKurduktan sonra Microsoft hesabınla giriş yap, sunuculara tek tıkla bağlan.',
+    'auto.linux': 'Linux / .deb indirme linki:\n{linux}',
+    'auto.siteOnly': 'Tüm sürümler ve indirme dosyaları:\n{site}',
+    'auto.trust': "Atemingo Launcher açık kaynaklı bir Minecraft launcher'ı — içinde **rat, trojan, token stealer, keylogger yok**. Giriş Microsoft OAuth ile yapılıyor; şifre veya token hiçbir yere gönderilmiyor. İstersen sanal makinede açıp kendin test edebilirsin.\n\nKaynak: {github}",
+    'auto.founder': '<@{owner}> kurucu bu mesajınıza bakacak.',
   },
 
   en: {
@@ -265,6 +271,12 @@ const STRINGS = {
     'ticketgui.posted': 'Panel posted in {channel}.',
     'ticketgui.failed': 'Could not post the panel (permissions or channel).',
     'ticketgui.alreadyOpen': 'You already have an open ticket: {channel}',
+    'auto.askOs': 'Which operating system are you on — **Windows** or **Linux** (deb included)? Tell me and I will send the download link.',
+    'auto.windows': 'Windows download link:\n{windows}\n\nAfter installing, sign in with your Microsoft account and join servers with one click.',
+    'auto.linux': 'Linux / .deb download link:\n{linux}',
+    'auto.siteOnly': 'All versions and download files:\n{site}',
+    'auto.trust': 'Atemingo Launcher is an open-source Minecraft launcher — there is no **rat, trojan, token stealer or keylogger** in it. Sign-in runs through Microsoft OAuth; no password or token is ever sent anywhere. You can open it in a virtual machine and verify it yourself.\n\nSource: {github}',
+    'auto.founder': '<@{owner}> the founder will look at your message.',
   },
 };
 

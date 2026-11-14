@@ -6,6 +6,7 @@ const { t, resolveLang } = require('./i18n');
 const stats = require('./stats');
 const moderation = require('./moderation');
 const presence = require('./presence');
+const ticketauto = require('./ticketauto');
 
 const WATCH_INTERVAL = 5 * 60 * 1000;
 
@@ -18,6 +19,7 @@ function isStaff(member, config) {
 function attach(client, config, store) {
   moderation.attach(client, config, store);
   presence.attach(client, config, store);
+  ticketauto.attach(client, config, store);
   for (const command of client.commands?.values?.() || []) {
     if (typeof command.attach === 'function') command.attach(client, config, store);
   }

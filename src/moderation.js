@@ -169,6 +169,7 @@ function attach(client, config, store) {
     client.on(Events.MessageCreate, (message) => {
       if (!message.inGuild() || message.author.bot) return;
       if (config.guildId && message.guild.id !== config.guildId) return;
+      if (/^ticket:\d{15,20}/.test(message.channel?.topic || '')) return;
       const member = message.member;
       if (!member || isExempt(member, config)) return;
       const hit = detect(message, config, matchers);
