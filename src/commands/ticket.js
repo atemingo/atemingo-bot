@@ -44,9 +44,58 @@ function closeRow(lang) {
   );
 }
 
+async function openTicket(guild, user, config, { slug = 'ticket', reason = '-' } = {}) {
+  const me = guild.members.me;
+  if (!me?.permissions.has(PermissionFlagsBits.ManageChannels)) return null;
+
+  const name = `${slug}-${user.username}`.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 90) || slug;
+  const staffRole = config.staffRoleIds?.[0];
+
+  const overwrites = [
+    { id: guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
+    {
+      id: user.id,
+      allow: [
+        PermissionFlagsBits.ViewChannel,
+        PermissionFlagsBits.SendMessages,
+        PermissionFlagsBits.ReadMessageHistory,
+        PermissionFlagsBits.AttachFiles,
+        PermissionFlagsBits.EmbedLinks,
+      ],
+    },
+  ];
+  if (staffRole) {
+    overwrites.push({
+      id: staffRole,
+      allow: [
+        PermissionFlagsBits.ViewChannel,
+        PermissionFlagsBits.SendMessages,
+        PermissionFlagsBits.ReadMessageHistory,
+        PermissionFlagsBits.ManageMessages,
+      ],
+    });
+  }
+  if (me.id) {
+    overwrites.push({ id: me.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ManageChannels] });
+  }
+
+  return guild.channels
+    .create({
+      name,
+      type: ChannelType.GuildText,
+      topic: `ticket:${user.id}`,
+      permissionOverwrites: overwrites,
+      parent: config.channels?.ticketCategory || undefined,
+    })
+    .catch(() => null);
+}
+
 module.exports = {
   staffOnly: false,
   data: builder,
+  openTicket,
+  closeRow,
+  staffMember,
 
   async run(interaction, { config, store }) {
     const lang = resolveLang(interaction, store, config);
@@ -58,46 +107,8 @@ module.exports = {
       return;
     }
 
-    const name = `ticket-${interaction.user.username}`.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 90) || 'ticket';
     const staffRole = config.staffRoleIds?.[0];
-
-    const overwrites = [
-      { id: interaction.guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
-      {
-        id: interaction.user.id,
-        allow: [
-          PermissionFlagsBits.ViewChannel,
-          PermissionFlagsBits.SendMessages,
-          PermissionFlagsBits.ReadMessageHistory,
-          PermissionFlagsBits.AttachFiles,
-          PermissionFlagsBits.EmbedLinks,
-        ],
-      },
-    ];
-    if (staffRole) {
-      overwrites.push({
-        id: staffRole,
-        allow: [
-          PermissionFlagsBits.ViewChannel,
-          PermissionFlagsBits.SendMessages,
-          PermissionFlagsBits.ReadMessageHistory,
-          PermissionFlagsBits.ManageMessages,
-        ],
-      });
-    }
-    if (me.id) {
-      overwrites.push({ id: me.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ManageChannels] });
-    }
-
-    const channel = await interaction.guild.channels
-      .create({
-        name,
-        type: ChannelType.GuildText,
-        topic: `ticket:${interaction.user.id}`,
-        permissionOverwrites: overwrites,
-        parent: config.channels?.ticketCategory || undefined,
-      })
-      .catch(() => null);
+    const channel = await openTicket(interaction.guild, interaction.user, config, { reason });
 
     if (!channel) {
       await interaction.reply({ content: t(lang, 'ticket.failed'), flags: MessageFlags.Ephemeral });

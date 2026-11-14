@@ -122,6 +122,17 @@ const STRINGS = {
     'ticket.denied': 'Bu talebi sadece sahibi veya yetkili kapatabilir.',
     'ticket.closing': 'Talep 3 saniye içinde kapatılıyor.',
     'ticket.closeButton': 'Talebi kapat',
+    'ticketgui.desc': 'Aşağıdaki **Destek Talebini Oluştur** butonlarından birine basarak talebini oluşturabilirsin.',
+    'ticketgui.partnerLabel': 'Partner Server Appeal',
+    'ticketgui.bugLabel': 'Bug-Report',
+    'ticketgui.installLabel': "I can't install",
+    'ticketgui.partnerTitle': 'Partner Server Appeal',
+    'ticketgui.bugTitle': 'Bug Report',
+    'ticketgui.installTitle': "I can't install",
+    'ticketgui.intro': '{user} talebini açtı.\nYetkili: {staff}\n\nSorununu, ekran görüntüsünü ve sistem bilgini yaz. Kapatmak için aşağıdaki butonu kullan.',
+    'ticketgui.posted': 'Panel {channel} kanalına gönderildi.',
+    'ticketgui.failed': 'Panel gönderilemedi (yetki veya kanal).',
+    'ticketgui.alreadyOpen': 'Zaten açık bir destek kanalın var: {channel}',
   },
 
   en: {
@@ -243,6 +254,17 @@ const STRINGS = {
     'ticket.denied': 'Only the owner or staff can close this ticket.',
     'ticket.closing': 'Closing the ticket in 3 seconds.',
     'ticket.closeButton': 'Close ticket',
+    'ticketgui.desc': 'Press one of the **Create a Support Ticket** buttons below to open your ticket.',
+    'ticketgui.partnerLabel': 'Partner Server Appeal',
+    'ticketgui.bugLabel': 'Bug-Report',
+    'ticketgui.installLabel': "I can't install",
+    'ticketgui.partnerTitle': 'Partner Server Appeal',
+    'ticketgui.bugTitle': 'Bug Report',
+    'ticketgui.installTitle': "I can't install",
+    'ticketgui.intro': '{user} opened this ticket.\nStaff: {staff}\n\nDescribe the issue, attach a screenshot and your system info. Use the button below to close it.',
+    'ticketgui.posted': 'Panel posted in {channel}.',
+    'ticketgui.failed': 'Could not post the panel (permissions or channel).',
+    'ticketgui.alreadyOpen': 'You already have an open ticket: {channel}',
   },
 };
 
@@ -275,7 +297,7 @@ function addLangOption(builder, description) {
 }
 
 function resolveLang(interaction, store, config) {
-  const chosen = interaction.options.getString('language');
+  const chosen = typeof interaction.options?.getString === 'function' ? interaction.options.getString('language') : null;
   const meta = store.meta();
   if (!meta.users || typeof meta.users !== 'object') meta.users = {};
   const current = meta.users[interaction.user.id] || {};
