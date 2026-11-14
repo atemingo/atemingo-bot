@@ -4,6 +4,7 @@ const { Events, MessageFlags, EmbedBuilder, ActivityType } = require('discord.js
 const { GOLD, fetchVersion, releaseEmbed, downloadRow, statusEmbed } = require('./ui');
 const { t, resolveLang } = require('./i18n');
 const stats = require('./stats');
+const moderation = require('./moderation');
 
 const WATCH_INTERVAL = 5 * 60 * 1000;
 
@@ -14,6 +15,8 @@ function isStaff(member, config) {
 }
 
 function attach(client, config, store) {
+  moderation.attach(client, config, store);
+
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     const command = client.commands.get(interaction.commandName);

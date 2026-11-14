@@ -32,5 +32,31 @@
     "panelChannel": "",
     "launcherUrl": "https://atemingo-friends.onrender.com"
   },
-  "sponsors": []
+  "sponsors": [],
+  "moderation": {
+    "enabled": true,
+    "logChannel": "",
+    "timeoutsMinutes": [
+      5,
+      30,
+      120,
+      720,
+      1440
+    ],
+    "resetAfterDays": 30,
+    "exemptRoleIds": [],
+    "keywords": [
+      "rat",
+      "trojan",
+      "virus",
+      "malware",
+      "keylogger",
+      "stealer",
+      "grabber",
+      "token grabber",
+      "token logger",
+      "backdoor",
+      "ransomware"
+    ]
+  }
 }

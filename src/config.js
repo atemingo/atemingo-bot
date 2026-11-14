@@ -26,6 +26,14 @@ const DEFAULTS = {
     launcherUrl: '',
   },
   sponsors: [],
+  moderation: {
+    enabled: true,
+    logChannel: '',
+    timeoutsMinutes: [5, 30, 120, 720, 1440],
+    resetAfterDays: 30,
+    exemptRoleIds: [],
+    keywords: [],
+  },
 };
 
 function merge(base, extra) {

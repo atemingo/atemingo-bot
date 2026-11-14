@@ -63,6 +63,13 @@ const STRINGS = {
 
     'hosgeldin.title': '{user} aramıza katıldı',
     'hosgeldin.desc': 'Hoş geldin <@{id}>.\nLauncher: {site}\nİndirme ve kurulum için `/indir`',
+
+    'mod.warn': '{user} mesajı silindi ("{word}"). Uygulanan: {action}.',
+    'mod.timeout': '{min} dakika zaman aşımı',
+    'mod.timeoutFail': 'zaman aşımı uygulanamadı (yetki)',
+    'mod.ban': 'kalıcı ban',
+    'mod.banFail': 'ban uygulanamadı (yetki)',
+    'mod.log': 'Otomatik moderasyon',
   },
 
   en: {
@@ -125,6 +132,13 @@ const STRINGS = {
 
     'hosgeldin.title': '{user} joined the server',
     'hosgeldin.desc': 'Welcome <@{id}>.\nLauncher: {site}\nUse `/download` to install',
+
+    'mod.warn': '{user} message deleted ("{word}"). Applied: {action}.',
+    'mod.timeout': '{min} minute timeout',
+    'mod.timeoutFail': 'timeout failed (permissions)',
+    'mod.ban': 'permanent ban',
+    'mod.banFail': 'ban failed (permissions)',
+    'mod.log': 'Automatic moderation',
   },
 };
 
