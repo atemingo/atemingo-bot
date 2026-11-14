@@ -1,0 +1,36 @@
+{
+  "language": "tr",
+  "guildId": "1564943672695455764",
+  "staffRoleIds": [
+    "1571245769132867598"
+  ],
+  "roles": {
+    "uye": ""
+  },
+  "channels": {
+    "duyuru": "1566123711046877365",
+    "hosgeldin": ""
+  },
+  "links": {
+    "site": "https://atemingo.github.io/AtemingoLauncher",
+    "version": "https://atemingo.github.io/AtemingoLauncher/updates/version.json",
+    "windows": "https://github.com/atemingo/AtemingoLauncher/releases/latest",
+    "linux": "https://github.com/atemingo/AtemingoLauncher/releases/latest",
+    "github": "https://github.com/atemingo/AtemingoLauncher",
+    "discord": "https://discord.gg/jknhMGrrVG"
+  },
+  "servers": [
+    {
+      "name": "Lunex Vanilla",
+      "ip": "lunexvanilla.com",
+      "version": "1.21.11",
+      "note": "Java"
+    }
+  ],
+  "stats": {
+    "refreshSeconds": 60,
+    "panelChannel": "",
+    "launcherUrl": "https://atemingo-friends.onrender.com"
+  },
+  "sponsors": []
+}

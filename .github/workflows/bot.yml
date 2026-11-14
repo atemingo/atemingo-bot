@@ -1,0 +1,30 @@
+name: atemingo-bot
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: atemingo-bot
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: bot
+        env:
+          BOT_TOKENS: ${{ secrets.BOT_TOKENS }}
+          GH_STATE_REPO: ${{ github.repository }}
+          GH_STATE_TOKEN: ${{ secrets.STATE_TOKEN }}
+        run: node src/index.js
