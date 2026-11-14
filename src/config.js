@@ -29,7 +29,7 @@ const DEFAULTS = {
   moderation: {
     enabled: true,
     logChannel: '',
-    timeoutsMinutes: [5, 30, 120, 720, 1440],
+    timeoutsMinutes: [5, 30, 120, 720, 1440, 10080],
     resetAfterDays: 30,
     exemptRoleIds: [],
     keywords: [],

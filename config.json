@@ -41,7 +41,8 @@
       30,
       120,
       720,
-      1440
+      1440,
+      10080
     ],
     "resetAfterDays": 30,
     "exemptRoleIds": [],
