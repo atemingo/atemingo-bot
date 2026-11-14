@@ -70,6 +70,19 @@ const STRINGS = {
     'mod.ban': 'kalıcı ban',
     'mod.banFail': 'ban uygulanamadı (yetki)',
     'mod.log': 'Otomatik moderasyon',
+
+    'unban.title': 'Ban kaldırıldı',
+    'unban.done': '{user} için ban kaldırıldı.',
+    'unban.notFound': '"{query}" ban listesinde yok.',
+    'unban.failed': '{user} banı kaldırılamadı (yetki).',
+    'unban.reason': 'Sebep',
+    'unban.logTitle': 'Ban kaldırma',
+    'unbanall.title': 'Toplu ban kaldırma',
+    'unbanall.done': '{total} kayıttan {ok} ban kaldırıldı, {failed} başarısız.',
+    'unbanall.none': 'Ban listesi boş.',
+    'unbanall.failed': 'Ban listesi alınamadı (yetki).',
+    'unbanall.needConfirm': 'Onay kutusu işaretlenmeli.',
+    'unbanall.logTitle': 'Toplu ban kaldırma',
   },
 
   en: {
@@ -139,6 +152,19 @@ const STRINGS = {
     'mod.ban': 'permanent ban',
     'mod.banFail': 'ban failed (permissions)',
     'mod.log': 'Automatic moderation',
+
+    'unban.title': 'Ban lifted',
+    'unban.done': 'Ban lifted for {user}.',
+    'unban.notFound': '"{query}" is not in the ban list.',
+    'unban.failed': 'Could not lift ban for {user} (permissions).',
+    'unban.reason': 'Reason',
+    'unban.logTitle': 'Ban lifted',
+    'unbanall.title': 'Bulk unban',
+    'unbanall.done': '{ok} of {total} bans lifted, {failed} failed.',
+    'unbanall.none': 'The ban list is empty.',
+    'unbanall.failed': 'Could not read the ban list (permissions).',
+    'unbanall.needConfirm': 'The confirm option must be checked.',
+    'unbanall.logTitle': 'Bulk unban',
   },
 };
 
