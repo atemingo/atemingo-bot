@@ -16,6 +16,9 @@ function isStaff(member, config) {
 
 function attach(client, config, store) {
   moderation.attach(client, config, store);
+  for (const command of client.commands?.values?.() || []) {
+    if (typeof command.attach === 'function') command.attach(client, config, store);
+  }
 
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
@@ -45,6 +48,15 @@ function attach(client, config, store) {
         const role = member.guild.roles.cache.get(roleId) || (await member.guild.roles.fetch(roleId).catch(() => null));
         if (role) await member.roles.add(role).catch(() => {});
       }
+      const welcomeDm = [
+        `Welcome to **${member.guild.name}**, ${member.user.username}!`,
+        '',
+        'Atemingo Launcher is free for Windows and Linux.',
+        `Download: ${config.links.site}`,
+        `Discord: ${config.links.discord}`,
+        'Use `/download` for links and `/ip` for server addresses.',
+      ].join('\n');
+      await member.send({ content: welcomeDm }).catch(() => {});
       const channelId = config.channels?.hosgeldin;
       if (!channelId) return;
       const channel = await member.guild.channels.fetch(channelId).catch(() => null);

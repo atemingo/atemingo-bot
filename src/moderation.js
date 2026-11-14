@@ -119,6 +119,16 @@ async function punish(client, message, config, store, hit) {
   } else if (guard.banOnLastStrike === false) {
     applied = t(config.language, 'mod.banSkipped');
   } else {
+    await member
+      .send({
+        content: [
+          `You were banned from **${message.guild.name}**.`,
+          '',
+          `Reason: ${hit.reason} (${hit.label})`,
+          'Ban appeals: https://discord.gg/jknhMGrrVG',
+        ].join('\n'),
+      })
+      .catch(() => {});
     const ok = await member
       .ban({ reason: `Atemingo koruma: ${hit.reason}/${hit.label}`, deleteMessageSeconds: 3600 })
       .then(() => true)
@@ -209,6 +219,18 @@ function attachGuard(client, config, store) {
       const kick = inRaid ? raidCfg.raidAction !== 'ban' : raidCfg.youngAction !== 'ban';
       const why = inRaid ? 'raid' : 'young';
       const reason = `Atemingo koruma: ${why} (${member.user.tag})`;
+      const whyText = why === 'raid' ? 'raid protection' : `account younger than ${minAge} days`;
+
+      await member
+        .send({
+          content: [
+            `You were ${kick ? 'kicked' : 'banned'} from **${member.guild.name}**.`,
+            '',
+            `Reason: ${whyText}`,
+            'If this was a mistake, rejoin and open a ticket.',
+          ].join('\n'),
+        })
+        .catch(() => {});
 
       const ok = kick
         ? await member.kick(reason).then(() => true).catch(() => false)

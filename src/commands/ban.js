@@ -63,6 +63,17 @@ module.exports = {
       return;
     }
 
+    await user
+      .send({
+        content: [
+          `You were banned from **${interaction.guild.name}**.`,
+          '',
+          `Reason: ${reason}`,
+          `Appeals: ${config.links.discord}`,
+        ].join('\n'),
+      })
+      .catch(() => {});
+
     const ok = await interaction.guild.members
       .ban(user.id, { reason, deleteMessageSeconds: Math.min(days, 7) * 86400 })
       .then(() => true)

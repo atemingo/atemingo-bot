@@ -105,6 +105,20 @@ const STRINGS = {
     'lock.unlocked': '{channel} kanalının kilidi kaldırıldı.',
     'lock.failed': '{channel} kanalı güncellenemedi (yetki).',
     'lock.notChannel': 'Bu kanal kilitlenemiyor.',
+
+    'kick.title': 'Sunucudan atıldı',
+    'kick.done': '{user} sunucudan atıldı, sebep DM ile gönderildi.',
+    'kick.self': 'Kendini atamazsın.',
+    'kick.notMember': '{user} sunucuda yok.',
+    'kick.notKickable': '{user} atılamadı (yetki/hiyerarşi).',
+    'ticket.title': 'Destek talebi',
+    'ticket.body': '{user} destek talebi açtı.\nYetkili: {staff}\nSebep: {reason}\n\nKapatmak için aşağıdaki butona bas.',
+    'ticket.opened': 'Talep açıldı: {channel}',
+    'ticket.failed': 'Kanal açılamadı (yetki).',
+    'ticket.noPerm': 'Botun kanal yönetme izni yok.',
+    'ticket.denied': 'Bu talebi sadece sahibi veya yetkili kapatabilir.',
+    'ticket.closing': 'Talep 3 saniye içinde kapatılıyor.',
+    'ticket.closeButton': 'Talebi kapat',
   },
 
   en: {
@@ -209,6 +223,20 @@ const STRINGS = {
     'lock.unlocked': '{channel} is unlocked.',
     'lock.failed': 'Could not update {channel} (permissions).',
     'lock.notChannel': 'That channel cannot be locked.',
+
+    'kick.title': 'Kicked',
+    'kick.done': '{user} was kicked, reason sent via DM.',
+    'kick.self': 'You cannot kick yourself.',
+    'kick.notMember': '{user} is not in the server.',
+    'kick.notKickable': 'Could not kick {user} (permissions/hierarchy).',
+    'ticket.title': 'Support ticket',
+    'ticket.body': '{user} opened a ticket.\nStaff: {staff}\nReason: {reason}\n\nPress the button below to close it.',
+    'ticket.opened': 'Ticket opened: {channel}',
+    'ticket.failed': 'Could not create the channel (permissions).',
+    'ticket.noPerm': 'The bot lacks Manage Channels permission.',
+    'ticket.denied': 'Only the owner or staff can close this ticket.',
+    'ticket.closing': 'Closing the ticket in 3 seconds.',
+    'ticket.closeButton': 'Close ticket',
   },
 };
 
