@@ -55,15 +55,22 @@ module.exports = {
 
     let ok = 0;
     let failed = 0;
+    const users = store.meta().users || {};
     for (const ban of bans.values()) {
       const removed = await interaction.guild.bans
         .remove(ban.user.id, reason)
         .then(() => true)
         .catch(() => false);
-      if (removed) ok += 1;
-      else failed += 1;
+      if (removed) {
+        ok += 1;
+        if (users[ban.user.id]?.mod) {
+          users[ban.user.id].mod.strikes = 0;
+          users[ban.user.id].mod.at = 0;
+        }
+      } else failed += 1;
       await new Promise((resolve) => setTimeout(resolve, 120));
     }
+    if (ok) store.save();
 
     const embed = new EmbedBuilder()
       .setColor(GOLD)

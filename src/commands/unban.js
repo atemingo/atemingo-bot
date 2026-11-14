@@ -72,6 +72,13 @@ module.exports = {
       return;
     }
 
+    const users = store.meta().users || {};
+    if (users[ban.user.id]?.mod) {
+      users[ban.user.id].mod.strikes = 0;
+      users[ban.user.id].mod.at = 0;
+      store.save();
+    }
+
     const embed = new EmbedBuilder()
       .setColor(GOLD)
       .setTitle(t(lang, 'unban.title'))
