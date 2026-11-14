@@ -49,6 +49,13 @@ const DEFAULTS = {
       raidAction: 'ban',
     },
   },
+  launcherRole: {
+    enabled: true,
+    roleId: '1571274984062451894',
+    activityMatch: ['ATEMINGO LAUNCHER'],
+    expireDays: 7,
+    sweepMinutes: 10,
+  },
 };
 
 function merge(base, extra) {

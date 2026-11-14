@@ -55,6 +55,7 @@ const clients = tokens.map((entry, index) => {
       GatewayIntentBits.GuildMembers,
       GatewayIntentBits.GuildMessages,
       GatewayIntentBits.MessageContent,
+      GatewayIntentBits.GuildPresences,
     ],
     partials: [Partials.GuildMember],
   });
