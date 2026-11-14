@@ -12,9 +12,9 @@ const builder = addLangOption(
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addStringOption((option) =>
       option
-        .setName('user_id')
-        .setDescription('User ID or username#tag')
-        .setDescriptionLocalizations({ tr: 'Kullanıcı ID veya ad#etiket' })
+        .setName('user')
+        .setDescription('User ID, username or @mention')
+        .setDescriptionLocalizations({ tr: 'Kullanıcı ID, ad veya @etiket' })
         .setRequired(true)
         .setMaxLength(64),
     )
@@ -36,11 +36,12 @@ async function resolveBan(guild, query) {
   }
   const bans = await guild.bans.fetch().catch(() => null);
   if (!bans) return null;
-  const needle = cleaned.toLowerCase();
+  const needle = cleaned.replace(/^@/, '').toLowerCase();
+  const name = (ban) => [ban.user.username, ban.user.globalName].filter(Boolean).map((value) => value.toLowerCase());
   return (
-    bans.find((ban) => ban.user.username.toLowerCase() === needle) ||
-    bans.find((ban) => `${ban.user.username}#${ban.user.discriminator}`.toLowerCase() === needle) ||
+    bans.find((ban) => name(ban).includes(needle)) ||
     bans.find((ban) => ban.user.tag?.toLowerCase() === needle) ||
+    bans.find((ban) => name(ban).some((value) => value.includes(needle))) ||
     null
   );
 }
@@ -51,7 +52,7 @@ module.exports = {
 
   async run(interaction, { config, store }) {
     const lang = resolveLang(interaction, store, config);
-    const query = interaction.options.getString('user_id', true);
+    const query = interaction.options.getString('user', true);
     const reason = interaction.options.getString('reason') || `${interaction.user.username} (unban)`;
 
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
@@ -79,11 +80,25 @@ module.exports = {
       store.save();
     }
 
+    const dmOk = await ban.user
+      .send({
+        content: t(lang, 'unban.dm', {
+          guild: interaction.guild.name,
+          reason: reason.slice(0, 300),
+          invite: config.links.discord,
+        }),
+      })
+      .then(() => true)
+      .catch(() => false);
+
     const embed = new EmbedBuilder()
       .setColor(GOLD)
       .setTitle(t(lang, 'unban.title'))
       .setDescription(t(lang, 'unban.done', { user: `<@${ban.user.id}>` }))
-      .addFields({ name: t(lang, 'unban.reason'), value: reason.slice(0, 300) });
+      .addFields(
+        { name: t(lang, 'unban.reason'), value: reason.slice(0, 300) },
+        { name: 'DM', value: t(lang, dmOk ? 'unban.dmSent' : 'unban.dmFail'), inline: true },
+      );
 
     await interaction.editReply({ embeds: [embed] });
 

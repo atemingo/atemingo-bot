@@ -55,6 +55,7 @@ module.exports = {
 
     let ok = 0;
     let failed = 0;
+    let dms = 0;
     const users = store.meta().users || {};
     for (const ban of bans.values()) {
       const removed = await interaction.guild.bans
@@ -67,8 +68,19 @@ module.exports = {
           users[ban.user.id].mod.strikes = 0;
           users[ban.user.id].mod.at = 0;
         }
+        const sent = await ban.user
+          .send({
+            content: t(lang, 'unban.dm', {
+              guild: interaction.guild.name,
+              reason: reason.slice(0, 300),
+              invite: config.links.discord,
+            }),
+          })
+          .then(() => true)
+          .catch(() => false);
+        if (sent) dms += 1;
       } else failed += 1;
-      await new Promise((resolve) => setTimeout(resolve, 120));
+      await new Promise((resolve) => setTimeout(resolve, 250));
     }
     if (ok) store.save();
 
@@ -76,7 +88,10 @@ module.exports = {
       .setColor(GOLD)
       .setTitle(t(lang, 'unbanall.title'))
       .setDescription(t(lang, 'unbanall.done', { ok, failed, total: bans.size }))
-      .addFields({ name: t(lang, 'unban.reason'), value: reason.slice(0, 300) });
+      .addFields(
+        { name: t(lang, 'unban.reason'), value: reason.slice(0, 300) },
+        { name: 'DM', value: `${dms}/${ok}`, inline: true },
+      );
 
     await interaction.editReply({ embeds: [embed] });
 
