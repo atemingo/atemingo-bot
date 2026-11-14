@@ -59,5 +59,22 @@
       "backdoor",
       "ransomware"
     ]
+  },
+  "guard": {
+    "enabled": true,
+    "blockLinks": true,
+    "blockAttachments": true,
+    "allowDomains": [
+      "atemingo.github.io"
+    ],
+    "skipBots": true,
+    "banOnLastStrike": true,
+    "raid": {
+      "joinsPerMinute": 8,
+      "lockMinutes": 30,
+      "minAccountAgeDays": 7,
+      "youngAction": "kick",
+      "raidAction": "ban"
+    }
   }
 }
