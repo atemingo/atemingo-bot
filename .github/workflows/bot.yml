@@ -27,4 +27,6 @@ jobs:
           BOT_TOKENS: ${{ secrets.BOT_TOKENS }}
           GH_STATE_REPO: ${{ github.repository }}
           GH_STATE_TOKEN: ${{ secrets.STATE_TOKEN }}
+          GH_STATE_BRANCH: state
+          GH_STATE_FILE: state.json
         run: node src/index.js
