@@ -20,7 +20,7 @@ module.exports = {
     await interaction.deferReply();
     const data = await stats.snapshot(
       config,
-      interaction.guild?.memberCount ?? 0,
+      stats.activeMembers(interaction.guild),
       presence.recentCount(interaction.guild, config),
     );
     await interaction.editReply({ embeds: [statusEmbed(data, config, lang)] });

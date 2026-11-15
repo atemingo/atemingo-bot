@@ -27,8 +27,19 @@ async function snapshot(config, guildCount, roleCount) {
   };
 }
 
+// "Aktif" = şu an çevrimiçi/boşta/rahatsız etme durumundaki botsuz üyeler.
+function activeMembers(guild) {
+  if (!guild) return 0;
+  let count = 0;
+  for (const member of guild.members.cache.values()) {
+    if (member.user.bot) continue;
+    if (member.presence && member.presence.status !== 'offline') count += 1;
+  }
+  return count;
+}
+
 function presenceText(data) {
   return `DISCORD: ${data.discord ?? 0} • LAUNCHER: ${data.launcher ?? 0}`;
 }
 
-module.exports = { snapshot, presenceText, launcherStats };
+module.exports = { snapshot, presenceText, launcherStats, activeMembers };
