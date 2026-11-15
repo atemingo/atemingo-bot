@@ -123,12 +123,9 @@ function startStats(clients, config, store) {
   const primary = clients[0];
   let busy = false;
 
-  const memberCount = () => {
-    const guild = config.guildId
-      ? primary.guilds.cache.get(config.guildId)
-      : primary.guilds.cache.first();
-    return guild?.memberCount ?? 0;
-  };
+  const guildNow = () =>
+    config.guildId ? primary.guilds.cache.get(config.guildId) : primary.guilds.cache.first();
+  const memberCount = () => guildNow()?.memberCount ?? 0;
 
   const updatePanel = async (data) => {
     const channelId = config.stats?.panelChannel;
@@ -156,7 +153,7 @@ function startStats(clients, config, store) {
     if (busy) return;
     busy = true;
     try {
-      const data = await stats.snapshot(config, memberCount());
+      const data = await stats.snapshot(config, memberCount(), presence.liveCount(guildNow(), config));
       const text = stats.presenceText(data);
       for (const client of clients) {
         if (!client.user) continue;

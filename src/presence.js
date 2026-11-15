@@ -89,6 +89,18 @@ async function sweep(client, config, store) {
   if (changed) store.save();
 }
 
+function liveCount(guild, config) {
+  if (!guild) return null;
+  const cfg = config.launcherRole || {};
+  const terms = cfg.activityMatch?.length ? cfg.activityMatch : ['ATEMINGO LAUNCHER'];
+  let n = 0;
+  for (const presence of guild.presences.cache.values()) {
+    if (presence.userId && guild.members.cache.get(presence.userId)?.user.bot) continue;
+    if (matches(presence, { activityMatch: terms })) n += 1;
+  }
+  return n;
+}
+
 function attach(client, config, store) {
   const cfg = config.launcherRole;
   if (!cfg?.enabled || !cfg.roleId) return;
@@ -124,4 +136,4 @@ function attach(client, config, store) {
   });
 }
 
-module.exports = { attach, matches, normalizeText };
+module.exports = { attach, matches, normalizeText, liveCount };

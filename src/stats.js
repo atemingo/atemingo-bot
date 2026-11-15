@@ -123,34 +123,17 @@ async function minecraftStatus(config) {
   }
 }
 
-// Launcher'in gercek kullanicilari: friends-server'daki /launcher/ping kayitlari.
-// Uc yalnizca PLUGIN_KEY ile acilir; yoksa sayi gosterilmez.
-async function launcherActive(config) {
-  const url = config.stats?.launcherUrl;
-  if (!url) return null;
-  try {
-    const res = await fetch(`${url.replace(/\/$/, '')}/stats`, {
-      headers: { 'User-Agent': 'atemingo-bot' },
-      signal: AbortSignal.timeout(20000),
-    });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return typeof json.online === 'number' ? json.online : null;
-  } catch {
-    return null;
-  }
-}
-
 let cache = { at: 0, value: null };
 
-async function snapshot(config, guildCount) {
+async function snapshot(config, guildCount, liveLauncher) {
+  const launcher = typeof liveLauncher === 'number' ? liveLauncher : null;
   if (Date.now() - cache.at < CACHE_MS && cache.value) {
-    return { ...cache.value, discord: guildCount };
+    return { ...cache.value, discord: guildCount, launcher };
   }
-  const [minecraft, launcher] = await Promise.all([minecraftStatus(config), launcherActive(config)]);
-  const value = { at: Date.now(), minecraft, launcher };
+  const minecraft = await minecraftStatus(config);
+  const value = { at: Date.now(), minecraft };
   cache = value;
-  return { ...value, discord: guildCount };
+  return { ...value, discord: guildCount, launcher };
 }
 
 function presenceText(data) {
@@ -160,4 +143,4 @@ function presenceText(data) {
   return parts.join(' • ');
 }
 
-module.exports = { snapshot, presenceText, minecraftStatus, launcherActive };
+module.exports = { snapshot, presenceText, minecraftStatus };
