@@ -42,25 +42,15 @@ function releaseEmbed(version, config, heading, lang = 'tr') {
 }
 
 function statusEmbed(data, config, lang = 'tr') {
-  const mc = data.minecraft;
   const fields = [
     { name: 'Discord', value: `**${data.discord ?? 0}** ${t(lang, 'durum.discord')}`, inline: true },
-    {
-      name: 'Minecraft',
-      value: mc ? `**${mc.online}** / ${mc.max} ${t(lang, 'durum.mc')}` : t(lang, 'durum.mcOff'),
-      inline: true,
-    },
+    { name: 'Launcher', value: `**${data.launcher ?? 0}** ${t(lang, 'durum.active')}`, inline: true },
   ];
-  if (data.launcher !== null && data.launcher !== undefined) {
-    fields.push({ name: 'Launcher', value: `**${data.launcher}** ${t(lang, 'durum.active')}`, inline: true });
-  }
-  const embed = new EmbedBuilder()
+  return new EmbedBuilder()
     .setColor(GOLD)
     .setTitle(t(lang, 'durum.title'))
     .addFields(...fields)
     .setFooter({ text: t(lang, 'durum.updated', { time: new Date().toLocaleTimeString(lang === 'en' ? 'en-GB' : 'tr-TR') }) });
-  if (mc?.name) embed.setDescription(`${mc.name}${mc.version ? ` · ${mc.version}` : ''}`);
-  return embed;
 }
 
 module.exports = { GOLD, fetchVersion, downloadRow, releaseEmbed, statusEmbed };

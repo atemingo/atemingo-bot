@@ -21,7 +21,7 @@ module.exports = {
     const data = await stats.snapshot(
       config,
       interaction.guild?.memberCount ?? 0,
-      presence.liveCount(interaction.guild, config),
+      presence.recentCount(interaction.guild, config),
     );
     await interaction.editReply({ embeds: [statusEmbed(data, config, lang)] });
   },

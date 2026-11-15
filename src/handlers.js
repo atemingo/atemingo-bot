@@ -153,7 +153,7 @@ function startStats(clients, config, store) {
     if (busy) return;
     busy = true;
     try {
-      const data = await stats.snapshot(config, memberCount(), presence.liveCount(guildNow(), config));
+      const data = await stats.snapshot(config, memberCount(), presence.recentCount(guildNow(), config));
       const text = stats.presenceText(data);
       for (const client of clients) {
         if (!client.user) continue;

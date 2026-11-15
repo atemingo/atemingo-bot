@@ -39,12 +39,12 @@ const STRINGS = {
     'surum.noData': 'Sürüm bilgisi alınamadı. Site: {site}',
     'surum.announce': '@everyone yeni sürüm çıktı',
 
-    'durum.description': 'Canlı durum: Discord üyeleri, sunucu, launcher',
+    'durum.description': 'Canlı durum: Discord üyeleri ve launcher kullanıcıları',
     'durum.title': 'Canlı durum',
     'durum.discord': 'üye',
     'durum.mc': 'çevrimiçi',
     'durum.mcOff': 'erişilemiyor',
-    'durum.active': 'aktif kullanıcı',
+    'durum.active': 'son 7 günde aktif',
     'durum.updated': 'Son güncelleme · {time}',
 
 
@@ -187,12 +187,12 @@ const STRINGS = {
     'surum.noData': 'Version info unavailable. Site: {site}',
     'surum.announce': '@everyone new release is out',
 
-    'durum.description': 'Live status: Discord members, server, launcher',
+    'durum.description': 'Live status: Discord members and launcher users',
     'durum.title': 'Live status',
     'durum.discord': 'members',
     'durum.mc': 'online',
     'durum.mcOff': 'unreachable',
-    'durum.active': 'active users',
+    'durum.active': 'active in the last 7 days',
     'durum.updated': 'Updated · {time}',
 
 
