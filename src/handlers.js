@@ -101,7 +101,8 @@ function startWatcher(client, config, store) {
       if (!channelId) return;
       const channel = await client.channels.fetch(channelId).catch(() => null);
       if (!channel || !channel.isTextBased()) return;
-      const lang = config.language === 'en' ? 'en' : 'tr';
+      // Duyuru tüm topluluğa gider: dil ayarından bağımsız olarak İngilizce.
+      const lang = 'en';
       await channel.send({
         content: t(lang, 'surum.announce'),
         embeds: [releaseEmbed(version, config, t(lang, 'surum.new', { version: version.version }), lang)],
