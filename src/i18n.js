@@ -44,7 +44,7 @@ const STRINGS = {
     'durum.discord': 'üye',
     'durum.mc': 'çevrimiçi',
     'durum.mcOff': 'erişilemiyor',
-    'durum.active': 'son 10 dk aktif',
+    'durum.active': 'son 5 dk aktif',
     'durum.range': 'Bugün: **{day}** · Toplam kayıt: **{total}**',
     'durum.updated': 'Son güncelleme · {time}',
 
@@ -193,7 +193,7 @@ const STRINGS = {
     'durum.discord': 'members',
     'durum.mc': 'online',
     'durum.mcOff': 'unreachable',
-    'durum.active': 'active in the last 10 min',
+    'durum.active': 'active in the last 5 min',
     'durum.range': 'Today: **{day}** · Total records: **{total}**',
     'durum.updated': 'Updated · {time}',
 
