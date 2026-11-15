@@ -145,6 +145,10 @@ const STRINGS = {
     'otorol.added': 'Eklendi',
     'otorol.removed': 'Kaldırıldı',
     'otorol.managed': 'Bot rollerini otorol olarak kullanamazsın.',
+    'temizle.title': 'Mesajlar silindi',
+    'temizle.done': '{channel} kanalından {count} mesaj silindi.',
+    'temizle.failed': 'Mesajlar silinemedi (yetki veya kanal).',
+    'temizle.old': '{count} mesaj 14 günden eski olduğu için silinemedi.',
   },
 
   en: {
@@ -289,6 +293,10 @@ const STRINGS = {
     'otorol.added': 'Added',
     'otorol.removed': 'Removed',
     'otorol.managed': 'Bot-managed roles cannot be used as autoroles.',
+    'temizle.title': 'Messages deleted',
+    'temizle.done': 'Deleted {count} messages in {channel}.',
+    'temizle.failed': 'Could not delete the messages (permissions or channel).',
+    'temizle.old': '{count} messages were older than 14 days and could not be deleted.',
   },
 };
 
