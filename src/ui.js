@@ -46,11 +46,17 @@ function statusEmbed(data, config, lang = 'tr') {
     { name: 'Discord', value: `**${data.discord ?? 0}** ${t(lang, 'durum.discord')}`, inline: true },
     { name: 'Launcher', value: `**${data.launcher ?? 0}** ${t(lang, 'durum.active')}`, inline: true },
   ];
-  return new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor(GOLD)
     .setTitle(t(lang, 'durum.title'))
     .addFields(...fields)
     .setFooter({ text: t(lang, 'durum.updated', { time: new Date().toLocaleTimeString(lang === 'en' ? 'en-GB' : 'tr-TR') }) });
+  if (data.launcherDay != null || data.launcherTotal != null) {
+    embed.setDescription(
+      t(lang, 'durum.range', { day: data.launcherDay ?? 0, total: data.launcherTotal ?? 0 }),
+    );
+  }
+  return embed;
 }
 
 module.exports = { GOLD, fetchVersion, downloadRow, releaseEmbed, statusEmbed };
