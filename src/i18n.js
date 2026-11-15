@@ -139,6 +139,12 @@ const STRINGS = {
     'auto.siteOnly': 'Tüm sürümler ve indirme dosyaları:\n{site}',
     'auto.trust': "Atemingo Launcher açık kaynaklı bir Minecraft launcher'ı — içinde **rat, trojan, token stealer, keylogger yok**. Giriş Microsoft OAuth ile yapılıyor; şifre veya token hiçbir yere gönderilmiyor. İstersen sanal makinede açıp kendin test edebilirsin.\n\nKaynak: {github}",
     'auto.founder': '<@{owner}> kurucu bu mesajınıza bakacak.',
+    'otorol.title': 'Otorol',
+    'otorol.list': 'Yeni üyelere verilen roller:\n{roles}',
+    'otorol.empty': 'Aktif otorol yok. `/otorol role:@rol` ile ekle.',
+    'otorol.added': 'Eklendi',
+    'otorol.removed': 'Kaldırıldı',
+    'otorol.managed': 'Bot rollerini otorol olarak kullanamazsın.',
   },
 
   en: {
@@ -277,6 +283,12 @@ const STRINGS = {
     'auto.siteOnly': 'All versions and download files:\n{site}',
     'auto.trust': 'Atemingo Launcher is an open-source Minecraft launcher — there is no **rat, trojan, token stealer or keylogger** in it. Sign-in runs through Microsoft OAuth; no password or token is ever sent anywhere. You can open it in a virtual machine and verify it yourself.\n\nSource: {github}',
     'auto.founder': '<@{owner}> the founder will look at your message.',
+    'otorol.title': 'Autorole',
+    'otorol.list': 'Roles given to new members:\n{roles}',
+    'otorol.empty': 'No autoroles yet. Add one with `/otorol role:@role`.',
+    'otorol.added': 'Added',
+    'otorol.removed': 'Removed',
+    'otorol.managed': 'Bot-managed roles cannot be used as autoroles.',
   },
 };
 

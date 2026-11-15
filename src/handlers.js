@@ -47,10 +47,11 @@ function attach(client, config, store) {
   client.on(Events.GuildMemberAdd, async (member) => {
     try {
       if (config.guildId && member.guild.id !== config.guildId) return;
-      const roleId = config.roles?.uye;
-      if (roleId) {
-        const role = member.guild.roles.cache.get(roleId) || (await member.guild.roles.fetch(roleId).catch(() => null));
-        if (role) await member.roles.add(role).catch(() => {});
+      const autoIds = [...new Set([config.roles?.uye, ...(store.meta().autorole || [])].filter(Boolean))];
+      for (const roleId of autoIds) {
+        const role =
+          member.guild.roles.cache.get(roleId) || (await member.guild.roles.fetch(roleId).catch(() => null));
+        if (role && !role.managed) await member.roles.add(role, 'otorol').catch(() => {});
       }
       const welcomeDm = [
         `Welcome to **${member.guild.name}**, ${member.user.username}!`,
