@@ -67,5 +67,11 @@ module.exports = {
     if (remove) embed.addFields({ name: t(lang, 'otorol.removed'), value: `<@&${remove.id}>` });
 
     await interaction.editReply({ embeds: [embed] });
+
+    if (add || remove) {
+      require('../autorole')
+        .grantToAll(interaction.client, config, store)
+        .catch((error) => console.error('[otorol] senkron:', error.message));
+    }
   },
 };
