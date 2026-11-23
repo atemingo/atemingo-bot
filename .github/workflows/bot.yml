@@ -2,12 +2,14 @@ name: atemingo-bot
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    # Her saat başı: iş 6 saatte bir zaman aşımına uğrar, saatlik tetik
+    # yeni koşuyu hemen başlatıp eskisini iptal eder — boşluk kalmaz.
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 concurrency:
   group: atemingo-bot
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   run:
