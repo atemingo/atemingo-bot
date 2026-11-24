@@ -115,6 +115,34 @@ async function boot() {
   handlers.startWatcher(readies[0], config, store);
   handlers.startStats(clients, config, store);
   console.log(`[bot] ${clients.length} bot canli, durum dongusu basladi`);
+  scheduleRelaunch();
+}
+
+// Actions isi 6 saatte kesiliyor ve zamanlanmis tetikler gecikebiliyor.
+// 5. saatte yeni kosu tetiklenir; concurrency ayari eskisini iptal eder.
+function scheduleRelaunch() {
+  if (process.env.GITHUB_ACTIONS !== 'true') return;
+  const repo = process.env.GH_STATE_REPO;
+  const token = process.env.GH_STATE_TOKEN;
+  if (!repo || !token) return;
+  setTimeout(async () => {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/bot.yml/dispatches`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'atemingo-bot',
+        },
+        body: JSON.stringify({ ref: 'main' }),
+      });
+      console.log(`[bot] yeniden baslatma tetigi: ${res.status}`);
+      if (!res.ok) console.error(`[bot] tetik reddedildi: ${(await res.text()).slice(0, 200)}`);
+    } catch (error) {
+      console.error('[bot] yeniden baslatma hatasi:', error.message);
+    }
+  }, 5 * 60 * 60 * 1000);
 }
 
 async function shutdown(signal) {
