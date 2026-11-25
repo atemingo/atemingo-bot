@@ -2,7 +2,6 @@
 
 const { SlashCommandBuilder } = require('discord.js');
 const stats = require('../stats');
-const presence = require('../presence');
 const { statusEmbed } = require('../ui');
 const { addLangOption, resolveLang } = require('../i18n');
 
@@ -21,7 +20,7 @@ module.exports = {
     const data = await stats.snapshot(
       config,
       stats.activeMembers(interaction.guild),
-      presence.recentCount(interaction.guild, config),
+      stats.launcherCounts(interaction.guild, config, store),
     );
     await interaction.editReply({ embeds: [statusEmbed(data, config, lang)] });
   },

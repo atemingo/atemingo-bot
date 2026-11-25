@@ -23,7 +23,6 @@ const DEFAULTS = {
   stats: {
     refreshSeconds: 60,
     panelChannel: '',
-    launcherUrl: '',
   },
   sponsors: [],
   moderation: {

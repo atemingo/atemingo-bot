@@ -89,17 +89,6 @@ async function sweep(client, config, store) {
   if (changed) store.save();
 }
 
-function recentCount(guild, config) {
-  if (!guild) return 0;
-  const roleId = config.launcherRole?.roleId;
-  if (!roleId) return 0;
-  let n = 0;
-  for (const member of guild.members.cache.values()) {
-    if (!member.user.bot && member.roles.cache.has(roleId)) n += 1;
-  }
-  return n;
-}
-
 function attach(client, config, store) {
   const cfg = config.launcherRole;
   if (!cfg?.enabled || !cfg.roleId) return;
@@ -135,4 +124,4 @@ function attach(client, config, store) {
   });
 }
 
-module.exports = { attach, matches, normalizeText, recentCount };
+module.exports = { attach, matches, normalizeText };
