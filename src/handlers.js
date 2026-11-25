@@ -138,7 +138,12 @@ function startWatcher(client, config, store) {
             continue;
           }
           if (target.kind === 'version') {
-            const record = await upsert(meta.versionMessage, channel, { content: version.version }, 'version');
+            const record = await upsert(
+              meta.versionMessage,
+              channel,
+              { content: `New Version! ${version.version} @here` },
+              'version',
+            );
             if (record) meta.versionMessage = record;
             else posted = false;
           } else {
