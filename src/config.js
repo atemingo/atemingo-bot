@@ -24,6 +24,9 @@ const DEFAULTS = {
     refreshSeconds: 60,
     panelChannel: '',
   },
+  credits: {
+    serverUrl: 'https://atemingo-friends.vercel.app',
+  },
   sponsors: [],
   moderation: {
     enabled: true,

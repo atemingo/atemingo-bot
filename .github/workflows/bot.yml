@@ -31,4 +31,5 @@ jobs:
           GH_STATE_TOKEN: ${{ secrets.STATE_TOKEN }}
           GH_STATE_BRANCH: state
           GH_STATE_FILE: state.json
+          CREDITS_KEY: ${{ secrets.CREDITS_KEY }}
         run: node src/index.js
