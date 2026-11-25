@@ -103,11 +103,28 @@ function startWatcher(client, config, store) {
       if (!channel || !channel.isTextBased()) return;
       // Duyuru tüm topluluğa gider: dil ayarından bağımsız olarak İngilizce.
       const lang = 'en';
-      await channel.send({
+      const payload = {
         content: t(lang, 'surum.announce'),
         embeds: [releaseEmbed(version, config, t(lang, 'surum.new', { version: version.version }), lang)],
         components: [downloadRow(config, version)],
+      };
+      // Tek mesaj kuralı: aynı kanaldaki duyuru her sürümde düzenlenir, yenisi atılmaz.
+      const stored = meta.releaseMessage;
+      if (stored?.channelId === channel.id) {
+        const message = await channel.messages.fetch(stored.id).catch(() => null);
+        if (message) {
+          await message.edit(payload).catch((error) => console.error('[watcher] duyuru duzenlenemedi:', error.message));
+          return;
+        }
+      }
+      const sent = await channel.send(payload).catch((error) => {
+        console.error('[watcher] duyuru gonderilemedi:', error.message);
+        return null;
       });
+      if (sent) {
+        meta.releaseMessage = { channelId: channel.id, id: sent.id };
+        store.save();
+      }
     } catch (error) {
       console.error('[watcher] hata:', error.message);
     } finally {
@@ -160,7 +177,7 @@ function startStats(clients, config, store) {
         if (!client.user) continue;
         try {
           client.user.setPresence({
-            status: 'online',
+            status: 'dnd',
             activities: [{ name: text, state: text, type: ActivityType.Custom }],
           });
         } catch (error) {
