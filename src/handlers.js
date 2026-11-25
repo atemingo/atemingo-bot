@@ -84,6 +84,30 @@ function attach(client, config, store) {
 function startWatcher(client, config, store) {
   let busy = false;
 
+  // Tek mesaj kuralı: kayıt varsa o mesaj düzenlenir, yoksa bir kez gönderilir.
+  const upsert = async (record, channel, payload, label) => {
+    if (record?.channelId === channel.id) {
+      const message = await channel.messages.fetch(record.id).catch(() => null);
+      if (message) {
+        const ok = await message
+          .edit(payload)
+          .then(() => true)
+          .catch((error) => {
+            console.error(`[watcher] ${label} duzenlenemedi:`, error.message);
+            return false;
+          });
+        if (ok) return record;
+      }
+    }
+    const sent = await channel
+      .send(payload)
+      .catch((error) => {
+        console.error(`[watcher] ${label} gonderilemedi:`, error.message);
+        return null;
+      });
+    return sent ? { channelId: channel.id, id: sent.id } : null;
+  };
+
   const tick = async () => {
     if (busy) return;
     busy = true;
@@ -93,44 +117,41 @@ function startWatcher(client, config, store) {
       const meta = store.meta();
       if (meta.version === version.version) return;
       const firstRun = !meta.version;
-      const channelId = config.channels?.duyuru;
-      const channel = channelId ? await client.channels.fetch(channelId).catch(() => null) : null;
-      const canPost = Boolean(channel?.isTextBased());
-      if (!firstRun && canPost) {
+      const targets = [
+        { kind: 'update', channelId: config.channels?.update },
+        { kind: 'version', channelId: config.channels?.version },
+      ].filter((target) => target.channelId);
+      if (!firstRun && targets.length) {
         // Duyuru tüm topluluğa gider: dil ayarından bağımsız olarak İngilizce.
         const lang = 'en';
-        const payload = {
+        const updatePayload = {
           content: t(lang, 'surum.announce'),
           embeds: [releaseEmbed(version, config, t(lang, 'surum.new', { version: version.version }), lang)],
           components: [downloadRow(config, version)],
         };
-        // Tek mesaj kuralı: aynı kanaldaki duyuru her sürümde düzenlenir, yenisi atılmaz.
-        let announced = false;
-        const stored = meta.releaseMessage;
-        if (stored?.channelId === channel.id) {
-          const message = await channel.messages.fetch(stored.id).catch(() => null);
-          if (message) {
-            announced = await message
-              .edit(payload)
-              .then(() => true)
-              .catch((error) => {
-                console.error('[watcher] duyuru duzenlenemedi:', error.message);
-                return false;
-              });
+        let posted = true;
+        for (const target of targets) {
+          const channel = await client.channels.fetch(target.channelId).catch(() => null);
+          if (!channel?.isTextBased()) {
+            console.error(`[watcher] ${target.kind} kanali bulunamadi: ${target.channelId}`);
+            posted = false;
+            continue;
+          }
+          if (target.kind === 'version') {
+            const record = await upsert(meta.versionMessage, channel, { content: version.version }, 'version');
+            if (record) meta.versionMessage = record;
+            else posted = false;
+          } else {
+            const record = await upsert(meta.releaseMessage, channel, updatePayload, 'update');
+            if (record) meta.releaseMessage = record;
+            else posted = false;
           }
         }
-        if (!announced) {
-          const sent = await channel
-            .send(payload)
-            .catch((error) => {
-              console.error('[watcher] duyuru gonderilemedi:', error.message);
-              return null;
-            });
-          if (sent) meta.releaseMessage = { channelId: channel.id, id: sent.id };
-          announced = Boolean(sent);
+        // Duyurular gitmeden sürüm işaretlenmez; sonraki turda yeniden denenir.
+        if (!posted) {
+          store.save();
+          return;
         }
-        // Duyuru gitmeden sürüm işaretlenmez; sonraki turda yeniden denenir.
-        if (!announced) return;
       }
       meta.version = version.version;
       meta.checkedAt = Date.now();

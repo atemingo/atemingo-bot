@@ -53,7 +53,7 @@ module.exports = {
     const target = interaction.options.getChannel('channel');
     const mention = interaction.options.getBoolean('mention') || false;
 
-    const channelId = target?.id || config.channels?.duyuru || interaction.channelId;
+    const channelId = target?.id || interaction.channelId;
     const channel = await interaction.guild.channels.fetch(channelId).catch(() => null);
     if (!channel || !channel.isTextBased()) {
       await interaction.reply({ content: t(lang, 'duyuru.badChannel'), flags: MessageFlags.Ephemeral });

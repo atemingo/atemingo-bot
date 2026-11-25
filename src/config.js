@@ -10,7 +10,7 @@ const DEFAULTS = {
   guildId: '',
   staffRoleIds: [],
   roles: { uye: '' },
-  channels: { duyuru: '', hosgeldin: '' },
+  channels: { update: '', version: '', hosgeldin: '' },
   links: {
     site: 'https://atemingo.github.io/AtemingoLauncher',
     version: 'https://atemingo.github.io/AtemingoLauncher/updates/version.json',
