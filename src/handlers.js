@@ -93,38 +93,48 @@ function startWatcher(client, config, store) {
       const meta = store.meta();
       if (meta.version === version.version) return;
       const firstRun = !meta.version;
+      const channelId = config.channels?.duyuru;
+      const channel = channelId ? await client.channels.fetch(channelId).catch(() => null) : null;
+      const canPost = Boolean(channel?.isTextBased());
+      if (!firstRun && canPost) {
+        // Duyuru tüm topluluğa gider: dil ayarından bağımsız olarak İngilizce.
+        const lang = 'en';
+        const payload = {
+          content: t(lang, 'surum.announce'),
+          embeds: [releaseEmbed(version, config, t(lang, 'surum.new', { version: version.version }), lang)],
+          components: [downloadRow(config, version)],
+        };
+        // Tek mesaj kuralı: aynı kanaldaki duyuru her sürümde düzenlenir, yenisi atılmaz.
+        let announced = false;
+        const stored = meta.releaseMessage;
+        if (stored?.channelId === channel.id) {
+          const message = await channel.messages.fetch(stored.id).catch(() => null);
+          if (message) {
+            announced = await message
+              .edit(payload)
+              .then(() => true)
+              .catch((error) => {
+                console.error('[watcher] duyuru duzenlenemedi:', error.message);
+                return false;
+              });
+          }
+        }
+        if (!announced) {
+          const sent = await channel
+            .send(payload)
+            .catch((error) => {
+              console.error('[watcher] duyuru gonderilemedi:', error.message);
+              return null;
+            });
+          if (sent) meta.releaseMessage = { channelId: channel.id, id: sent.id };
+          announced = Boolean(sent);
+        }
+        // Duyuru gitmeden sürüm işaretlenmez; sonraki turda yeniden denenir.
+        if (!announced) return;
+      }
       meta.version = version.version;
       meta.checkedAt = Date.now();
       store.save();
-      if (firstRun) return;
-      const channelId = config.channels?.duyuru;
-      if (!channelId) return;
-      const channel = await client.channels.fetch(channelId).catch(() => null);
-      if (!channel || !channel.isTextBased()) return;
-      // Duyuru tüm topluluğa gider: dil ayarından bağımsız olarak İngilizce.
-      const lang = 'en';
-      const payload = {
-        content: t(lang, 'surum.announce'),
-        embeds: [releaseEmbed(version, config, t(lang, 'surum.new', { version: version.version }), lang)],
-        components: [downloadRow(config, version)],
-      };
-      // Tek mesaj kuralı: aynı kanaldaki duyuru her sürümde düzenlenir, yenisi atılmaz.
-      const stored = meta.releaseMessage;
-      if (stored?.channelId === channel.id) {
-        const message = await channel.messages.fetch(stored.id).catch(() => null);
-        if (message) {
-          await message.edit(payload).catch((error) => console.error('[watcher] duyuru duzenlenemedi:', error.message));
-          return;
-        }
-      }
-      const sent = await channel.send(payload).catch((error) => {
-        console.error('[watcher] duyuru gonderilemedi:', error.message);
-        return null;
-      });
-      if (sent) {
-        meta.releaseMessage = { channelId: channel.id, id: sent.id };
-        store.save();
-      }
     } catch (error) {
       console.error('[watcher] hata:', error.message);
     } finally {

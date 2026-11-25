@@ -66,8 +66,19 @@ const clients = tokens.map((entry, index) => {
   return client;
 });
 
+// Bir bot 20 sn içinde hazır olmazsa boot kilitlenmesin; kalanlarla devam edilir.
 const readyPromises = clients.map(
-  (client) => new Promise((resolve) => client.once(Events.ClientReady, resolve)),
+  (client) =>
+    new Promise((resolve) => {
+      const timer = setTimeout(() => {
+        console.error(`[bot] ${client.tokenValue.slice(0, 8)}… 20 sn içinde hazır olmadı`);
+        resolve(null);
+      }, 20000);
+      client.once(Events.ClientReady, () => {
+        clearTimeout(timer);
+        resolve(client);
+      });
+    }),
 );
 
 async function registerCommands(client, applicationId) {
@@ -111,10 +122,11 @@ async function boot() {
     });
   }
 
-  const readies = await Promise.all(readyPromises);
+  const readies = (await Promise.all(readyPromises)).filter(Boolean);
+  if (!readies.length) throw new Error('hiçbir bot hazır olmadı');
   handlers.startWatcher(readies[0], config, store);
-  handlers.startStats(clients, config, store);
-  console.log(`[bot] ${clients.length} bot canli, durum dongusu basladi`);
+  handlers.startStats(readies, config, store);
+  console.log(`[bot] ${readies.length}/${clients.length} bot canli, durum dongusu basladi`);
   scheduleRelaunch();
 }
 
