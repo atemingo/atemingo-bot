@@ -4,29 +4,31 @@ const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits } = require('disc
 const { t, addLangOption, resolveLang } = require('../i18n');
 const events = require('../creditevent');
 
+const MAX_MINUTES = 365 * 1440;
+
+function parseDuration(raw) {
+  const text = String(raw || '').trim().toLowerCase().replace(/\s+/g, '');
+  const minutes = /^(\d{1,6})(dk|dakika|m|min)?$/.exec(text);
+  if (minutes) return Number(minutes[1]);
+  const days = /^(\d{1,5})(g|gun|gün|d|day)$/.exec(text);
+  if (days) return Number(days[1]) * 1440;
+  return 0;
+}
+
 const builder = addLangOption(
   new SlashCommandBuilder()
     .setName('credievent')
     .setDescription('Start a launcher credit event')
     .setDescriptionLocalizations({ tr: 'Launcher kredi etkinliği başlat' })
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
-    .addIntegerOption((option) =>
+    .addStringOption((option) =>
       option
-        .setName('minutes')
-        .setDescription('Duration in minutes')
-        .setDescriptionLocalizations({ tr: 'Süre (dakika)' })
-        .setMinValue(0)
-        .setMaxValue(10080)
-        .setRequired(false),
-    )
-    .addIntegerOption((option) =>
-      option
-        .setName('days')
-        .setDescription('Duration in days')
-        .setDescriptionLocalizations({ tr: 'Süre (gün)' })
-        .setMinValue(0)
-        .setMaxValue(365)
-        .setRequired(false),
+        .setName('sure')
+        .setDescription('Duration — e.g. 30dk, 90m, 2g')
+        .setDescriptionLocalizations({ tr: 'Süre — ör. 30dk, 90m, 2g' })
+        .setMinLength(1)
+        .setMaxLength(10)
+        .setRequired(true),
     )
     .addIntegerOption((option) =>
       option
@@ -45,16 +47,15 @@ module.exports = {
 
   async run(interaction, { client, config, store }) {
     const lang = resolveLang(interaction, store, config);
-    const minutes = interaction.options.getInteger('minutes') || 0;
-    const days = interaction.options.getInteger('days') || 0;
+    const raw = interaction.options.getString('sure');
     const credits = interaction.options.getInteger('credits');
-    const total = days * 1440 + minutes;
-    if (total < 1) {
-      await interaction.reply({ content: t(lang, 'creditevent.needDuration'), flags: MessageFlags.Ephemeral });
+    const minutes = parseDuration(raw);
+    if (minutes < 1 || minutes > MAX_MINUTES) {
+      await interaction.reply({ content: t(lang, 'creditevent.badDuration'), flags: MessageFlags.Ephemeral });
       return;
     }
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    const event = await events.create(client, config, store, interaction, total, credits, lang);
+    const event = await events.create(client, config, store, interaction, minutes, credits, lang);
     if (!event) {
       await interaction.editReply({ content: t(lang, 'creditevent.failed') });
       return;
