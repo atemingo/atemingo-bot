@@ -84,28 +84,15 @@ function attach(client, config, store) {
 function startWatcher(client, config, store) {
   let busy = false;
 
-  // Tek mesaj kuralı: kayıt varsa o mesaj düzenlenir, yoksa bir kez gönderilir.
-  const upsert = async (record, channel, payload, label) => {
-    if (record?.channelId === channel.id) {
-      const message = await channel.messages.fetch(record.id).catch(() => null);
-      if (message) {
-        const ok = await message
-          .edit(payload)
-          .then(() => true)
-          .catch((error) => {
-            console.error(`[watcher] ${label} duzenlenemedi:`, error.message);
-            return false;
-          });
-        if (ok) return record;
-      }
-    }
+  // Her sürüm kendi mesajı olarak gider; eski duyurular düzenlenmez.
+  const post = async (channel, payload, label) => {
     const sent = await channel
       .send(payload)
       .catch((error) => {
         console.error(`[watcher] ${label} gonderilemedi:`, error.message);
         return null;
       });
-    return sent ? { channelId: channel.id, id: sent.id } : null;
+    return Boolean(sent);
   };
 
   const tick = async () => {
@@ -138,18 +125,9 @@ function startWatcher(client, config, store) {
             continue;
           }
           if (target.kind === 'version') {
-            const record = await upsert(
-              meta.versionMessage,
-              channel,
-              { content: `New Version! ${version.version} @here` },
-              'version',
-            );
-            if (record) meta.versionMessage = record;
-            else posted = false;
-          } else {
-            const record = await upsert(meta.releaseMessage, channel, updatePayload, 'update');
-            if (record) meta.releaseMessage = record;
-            else posted = false;
+            if (!(await post(channel, { content: `New Version! ${version.version} @here` }, 'version'))) posted = false;
+          } else if (!(await post(channel, updatePayload, 'update'))) {
+            posted = false;
           }
         }
         // Duyurular gitmeden sürüm işaretlenmez; sonraki turda yeniden denenir.
