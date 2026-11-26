@@ -34,6 +34,21 @@
       "channelId": "1571280361005260900",
       "id": "1575193492345454643"
     },
-    "creditEvents": []
+    "creditEvents": [
+      {
+        "id": "976cfe05",
+        "guildId": "1564943672695455764",
+        "channelId": "1575512165492985866",
+        "messageId": "1575515279801319426",
+        "hostId": "1025675773790654465",
+        "lang": "en",
+        "credits": 100,
+        "createdAt": 1795702514235,
+        "endsAt": 1795702574235,
+        "status": "open",
+        "participants": [],
+        "winner": null
+      }
+    ]
   }
 }
