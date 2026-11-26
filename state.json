@@ -72,7 +72,13 @@
         "createdAt": 1795703762481,
         "endsAt": 1795703822481,
         "status": "open",
-        "participants": [],
+        "participants": [
+          {
+            "userId": "1563858492547272805",
+            "name": "McObezi",
+            "at": 1795703774983
+          }
+        ],
         "winner": null
       }
     ]
