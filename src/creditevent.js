@@ -94,6 +94,7 @@ async function deliverGrant(config, event) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-plugin-key': key, 'User-Agent': 'atemingo-bot' },
       body: JSON.stringify({
+        gid: event.id,
         name: event.winner.name,
         amount: event.credits,
         reason: `credit event ${event.id}`,
