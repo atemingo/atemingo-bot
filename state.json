@@ -60,6 +60,20 @@
         "finishedAt": 1795702574742,
         "grantedId": "ok",
         "grantedAt": 1795702756129
+      },
+      {
+        "id": "c3536da6",
+        "guildId": "1564943672695455764",
+        "channelId": "1575512165492985866",
+        "messageId": "1575520515571851297",
+        "hostId": "1025675773790654465",
+        "lang": "en",
+        "credits": 100,
+        "createdAt": 1795703762481,
+        "endsAt": 1795703822481,
+        "status": "open",
+        "participants": [],
+        "winner": null
       }
     ]
   }
