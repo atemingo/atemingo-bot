@@ -65,6 +65,10 @@ function panelRow(event, lang) {
         .setLabel(t(lang, 'creditevent.join'))
         .setEmoji('🎟️')
         .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId(`ce:leave:${event.id}`)
+        .setLabel(t(lang, 'creditevent.leave'))
+        .setStyle(ButtonStyle.Secondary),
     ),
   ];
 }
@@ -216,6 +220,26 @@ function attach(client, config, store) {
           ),
         );
         await interaction.showModal(modal);
+        return;
+      }
+
+      if (interaction.isButton() && interaction.customId.startsWith('ce:leave:')) {
+        const id = interaction.customId.slice('ce:leave:'.length);
+        const event = findEvent(store, id);
+        const lang = event?.lang || 'tr';
+        if (!event || event.status !== 'open' || Date.now() >= event.endsAt) {
+          await interaction.reply({ content: t(lang, 'creditevent.closed'), flags: MessageFlags.Ephemeral });
+          return;
+        }
+        const index = event.participants.findIndex((entry) => entry.userId === interaction.user.id);
+        if (index === -1) {
+          await interaction.reply({ content: t(lang, 'creditevent.notJoined'), flags: MessageFlags.Ephemeral });
+          return;
+        }
+        const [gone] = event.participants.splice(index, 1);
+        store.save();
+        await interaction.reply({ content: t(lang, 'creditevent.left', { name: gone.name }), flags: MessageFlags.Ephemeral });
+        await refreshPanel(client, event);
         return;
       }
 
