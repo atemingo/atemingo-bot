@@ -6,18 +6,27 @@ const events = require('../creditevent');
 
 const builder = addLangOption(
   new SlashCommandBuilder()
-    .setName('creditevent')
+    .setName('credievent')
     .setDescription('Start a launcher credit event')
     .setDescriptionLocalizations({ tr: 'Launcher kredi etkinliği başlat' })
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
     .addIntegerOption((option) =>
       option
         .setName('minutes')
-        .setDescription('Event duration in minutes')
-        .setDescriptionLocalizations({ tr: 'Etkinlik süresi (dakika)' })
-        .setMinValue(1)
+        .setDescription('Duration in minutes')
+        .setDescriptionLocalizations({ tr: 'Süre (dakika)' })
+        .setMinValue(0)
         .setMaxValue(10080)
-        .setRequired(true),
+        .setRequired(false),
+    )
+    .addIntegerOption((option) =>
+      option
+        .setName('days')
+        .setDescription('Duration in days')
+        .setDescriptionLocalizations({ tr: 'Süre (gün)' })
+        .setMinValue(0)
+        .setMaxValue(365)
+        .setRequired(false),
     )
     .addIntegerOption((option) =>
       option
@@ -36,10 +45,16 @@ module.exports = {
 
   async run(interaction, { client, config, store }) {
     const lang = resolveLang(interaction, store, config);
-    const minutes = interaction.options.getInteger('minutes');
+    const minutes = interaction.options.getInteger('minutes') || 0;
+    const days = interaction.options.getInteger('days') || 0;
     const credits = interaction.options.getInteger('credits');
+    const total = days * 1440 + minutes;
+    if (total < 1) {
+      await interaction.reply({ content: t(lang, 'creditevent.needDuration'), flags: MessageFlags.Ephemeral });
+      return;
+    }
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    const event = await events.create(client, config, store, interaction, minutes, credits, lang);
+    const event = await events.create(client, config, store, interaction, total, credits, lang);
     if (!event) {
       await interaction.editReply({ content: t(lang, 'creditevent.failed') });
       return;
