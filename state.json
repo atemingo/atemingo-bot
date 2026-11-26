@@ -71,7 +71,7 @@
         "credits": 100,
         "createdAt": 1795703762481,
         "endsAt": 1795703822481,
-        "status": "open",
+        "status": "done",
         "participants": [
           {
             "userId": "1563858492547272805",
@@ -79,7 +79,13 @@
             "at": 1795703774983
           }
         ],
-        "winner": null
+        "winner": {
+          "userId": "1563858492547272805",
+          "name": "McObezi"
+        },
+        "finishedAt": 1795703832429,
+        "grantedId": "ok",
+        "grantedAt": 1795703833596
       }
     ]
   }
