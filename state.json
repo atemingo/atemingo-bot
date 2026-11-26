@@ -45,7 +45,7 @@
         "credits": 100,
         "createdAt": 1795702514235,
         "endsAt": 1795702574235,
-        "status": "drawn",
+        "status": "done",
         "participants": [
           {
             "userId": "1563858492547272805",
@@ -57,7 +57,9 @@
           "userId": "1563858492547272805",
           "name": "McObezi"
         },
-        "finishedAt": 1795702574742
+        "finishedAt": 1795702574742,
+        "grantedId": "ok",
+        "grantedAt": 1795702756129
       }
     ]
   }
